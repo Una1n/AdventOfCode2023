@@ -85,6 +85,58 @@ namespace AdventOfCode2023
 
 		public static void RunPuzzle2()
 		{
+			string[] lines = File.ReadAllLines(@"Day3-Input.txt");
+			int numberOfCharacters = lines.Sum(s => s.Length);
+			int sumEngineParts = 0;
+			int x = 0, y = 0;
+			List<EnginePartNumber> parts = new();
+			List<Vector2> gearLocations = new();
+			foreach (string line in lines)
+			{
+				Regex regex = new Regex(@"\d+");
+				foreach (Match match in regex.Matches(line))
+				{
+					parts.Add(new(int.Parse(match.Value), new Vector2(match.Index, y)));
+				}
+
+				foreach (char c in line.ToCharArray())
+				{
+					if (c == '*')
+					{
+						gearLocations.Add(new Vector2(x, y));
+					}
+
+					x++;
+				}
+
+				x = 0;
+				y++;
+			}
+
+			foreach (Vector2 gearLocation in gearLocations)
+			{
+				List<EnginePartNumber> foundGearParts = new();
+				foreach (EnginePartNumber part in parts)
+				{
+					if (part.IsAdjacentToSymbol(gearLocation))
+					{
+						foundGearParts.Add(part);
+					}
+				}
+
+				if (foundGearParts.Count == 2)
+				{
+					int multipliedGear = 1;
+					foreach (EnginePartNumber foundGearPart in foundGearParts)
+					{
+						multipliedGear *= foundGearPart.partNr;
+					}
+
+					sumEngineParts += multipliedGear;
+				}
+			}
+
+			Console.WriteLine("Answer Puzzle 2: " + sumEngineParts);
 		}
 	}
 }
