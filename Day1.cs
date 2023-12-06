@@ -16,14 +16,9 @@ namespace AdventOfCode2023
 			{"nine", "9"}
 		};
 
-		public Day1()
-		{
-			//
-		}
-
 		public static void RunPuzzle1()
 		{
-			string[] lines = File.ReadAllLines(@"Day1-1.txt");
+			string[] lines = File.ReadAllLines(@"Day1-Input.txt");
 			int sumCalibration = 0;
 			foreach (string line in lines)
 			{
@@ -33,10 +28,10 @@ namespace AdventOfCode2023
 
 			Console.WriteLine("Answer Puzzle 1: " + sumCalibration);
 		}
-		
+
 		public static void RunPuzzle2()
 		{
-			string[] lines = File.ReadAllLines(@"Day1-1.txt");
+			string[] lines = File.ReadAllLines(@"Day1-Input.txt");
 			int sumCalibration = 0;
 			string digitOne, digitTwo = "";
 			foreach (string line in lines)
