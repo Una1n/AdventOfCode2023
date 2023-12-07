@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode2023
 {
@@ -92,22 +93,35 @@ namespace AdventOfCode2023
 				cards.Add(new Card(cardID, winningNumbers, playingNumbers));
 			}
 
-			foreach (Card card in cards)
+			foreach (Card originalCard in cards)
 			{
-				Console.WriteLine("Original: " + card.ID + " with " + card.cardsWon);
-				if (card.cardsWon > 0)
+				if (originalCard.cardsWon > 0)
 				{
-					for (int i = 1; i <= card.cardsWon; i++)
+					for (int i = 1; i <= originalCard.cardsWon; i++)
 					{
-						Card copyCard = cards.Find(x => x.ID == card.ID + i);
-						copyCard.copies.Add(new Card(copyCard));
+						Card nextOriginalCard = cards.Find(x => x.ID == originalCard.ID + i);
+						nextOriginalCard.copies.Add(new Card(nextOriginalCard));
 					}
+				}
+
+				if (originalCard.copies.Count > 0)
+				{
+					var stopwatch = Stopwatch.StartNew();
+					foreach (Card copy in originalCard.copies)
+					{
+						for (int i = 1; i <= copy.cardsWon; i++)
+						{
+							Card nextOriginalCard = cards.Find(x => x.ID == originalCard.ID + i);
+							nextOriginalCard.copies.Add(new Card(nextOriginalCard));
+						}
+					}
+					Console.WriteLine("{0:0} ms", stopwatch.Elapsed.TotalMilliseconds);
 				}
 			}
 
 			foreach (Card card in cards)
 			{
-				Console.WriteLine("Count: " + (card.copies.Count + 1));
+				sumPoints += (card.copies.Count + 1);
 			}
 
 			Console.WriteLine("Answer Puzzle 2: " + sumPoints);
