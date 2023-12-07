@@ -36,6 +36,25 @@ namespace AdventOfCode2023
 
 		public static void RunPuzzle2()
 		{
+			string[] lines = File.ReadAllLines(@"Day6-Input.txt");
+			Match timeMatches = Regex.Match(lines[0], "^Time:\\s+(.*)");
+			Match distanceMatches = Regex.Match(lines[1], "^Distance:\\s+(.*)");
+			int time = int.Parse(timeMatches.Groups[1].Value.Replace(" ", ""));
+			long distance = long.Parse(distanceMatches.Groups[1].Value.Replace(" ", ""));
+
+			int winningWays = 0;
+			for (int j = 0; j < time; j++)
+			{
+				long speed = j;
+				long remainingTime = time - j;
+				long distancePerSpeed = speed * remainingTime;
+				if (distancePerSpeed > distance)
+				{
+					winningWays++;
+				}
+			}
+
+			Console.WriteLine("Answer Puzzle 2: " + winningWays);
 		}
 	}
 }
