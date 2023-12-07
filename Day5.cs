@@ -89,6 +89,65 @@ namespace AdventOfCode2023
 
 		public static void RunPuzzle2()
 		{
+			string[] lines = File.ReadAllLines(@"Day5-Input.txt");
+			Match seedMatch = Regex.Match(lines[0], "^seeds: (.*)");
+			string seedLine = seedMatch.Groups[1].Value;
+
+			List<long> seeds = new();
+			List<long> seedRange = new();
+			Regex regex = new Regex(@"\d+");
+			bool isSeed = true;
+			foreach (Match match in regex.Matches(seedLine))
+			{
+				if (isSeed)
+				{
+					seeds.Add(long.Parse(match.Value));
+					isSeed = false;
+				}
+				else
+				{
+					seedRange.Add(long.Parse(match.Value));
+					isSeed = true;
+				}
+			}
+
+			List<(int, int)> blocks = GetAllBlocks(lines);
+
+			long lowestLocation = long.MaxValue;
+			//foreach (long seed in seeds)
+			//{
+			//	long minSeedRange = seed;
+			//	long maxSeedRange = seed + seedRange.Last();
+			//	for (long i = seed; i < maxSeedRange; i++)
+			//	{
+			//		long nextNumber = i;
+			//		foreach ((int, int) block in blocks)
+			//		{
+			//			for (int x = block.Item1; x <= block.Item2; x++)
+			//			{
+			//				string[] nrs = lines[x].Split(' ');
+			//				long destStartRange = long.Parse(nrs[0]);
+			//				long srcStartRange = long.Parse(nrs[1]);
+			//				long rangeLength = long.Parse(nrs[2]);
+
+			//				long maxSrcRange = srcStartRange + rangeLength;
+			//				if (nextNumber >= srcStartRange && nextNumber <= maxSrcRange)
+			//				{
+			//					nextNumber = nextNumber - srcStartRange + destStartRange;
+			//					break;
+			//				}
+			//			}
+			//		}
+
+			//		if (nextNumber < lowestLocation)
+			//		{
+			//			lowestLocation = nextNumber;
+			//			Console.WriteLine("Seed: {0}, Lowest Location: {1}", seed, lowestLocation);
+			//		}
+			//	}
+			//}
+
+			Console.WriteLine("Answer Puzzle 2: " + lowestLocation);
 		}
 	}
 }
