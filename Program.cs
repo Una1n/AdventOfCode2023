@@ -7,6 +7,7 @@ Console.WriteLine("1) Day 1");
 Console.WriteLine("2) Day 2");
 Console.WriteLine("3) Day 3");
 Console.WriteLine("4) Day 4");
+Console.WriteLine("5) Day 5");
 Console.Write("\r\nSelect an option: ");
 
 switch (Console.ReadLine())
@@ -26,5 +27,9 @@ switch (Console.ReadLine())
 	case "4":
 		Day4.RunPuzzle1();
 		Day4.RunPuzzle2();
+		break;
+	case "5":
+		Day5.RunPuzzle1();
+		Day5.RunPuzzle2();
 		break;
 }
