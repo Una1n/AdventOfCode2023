@@ -7,8 +7,9 @@ Console.WriteLine("1) Day 1");
 Console.WriteLine("2) Day 2");
 Console.WriteLine("3) Day 3");
 Console.WriteLine("4) Day 4");
-Console.WriteLine("5) Day 5");
+Console.WriteLine("5) Day 5 - only puzzle 1");
 Console.WriteLine("6) Day 6");
+Console.WriteLine("7) Day 7");
 Console.Write("\r\nSelect an option: ");
 
 switch (Console.ReadLine())
@@ -36,5 +37,9 @@ switch (Console.ReadLine())
 	case "6":
 		Day6.RunPuzzle1();
 		Day6.RunPuzzle2();
+		break;
+	case "7":
+		Day7.RunPuzzle1();
+		Day7.RunPuzzle2();
 		break;
 }
