@@ -4,16 +4,6 @@ namespace AdventOfCode2023
 {
 	internal class Day5
 	{
-		//seeds: 79 14 55 13
-
-		//seed-to-soil map:
-		//50 98 2
-		//52 50 48
-
-		// map:
-		// dest range start
-		// source range start
-		// range length
 		public static (int, int) FindBlock(string[] lines, string header)
 		{
 			int startBlockIndex = 0;
@@ -56,7 +46,6 @@ namespace AdventOfCode2023
 			string[] lines = File.ReadAllLines(@"Day5-Input.txt");
 			Match seedMatch = Regex.Match(lines[0], "^seeds: (.*)");
 			string seedLine = seedMatch.Groups[1].Value;
-			Console.WriteLine(seedLine);
 
 			List<long> seeds = new();
 			Regex regex = new Regex(@"\d+");
@@ -64,7 +53,6 @@ namespace AdventOfCode2023
 			{
 				seeds.Add(long.Parse(match.Value));
 			}
-			seeds.ForEach(Console.WriteLine);
 
 			List<(int, int)> blocks = GetAllBlocks(lines);
 
@@ -80,8 +68,6 @@ namespace AdventOfCode2023
 						long destStartRange = long.Parse(nrs[0]);
 						long srcStartRange = long.Parse(nrs[1]);
 						long rangeLength = long.Parse(nrs[2]);
-						//Console.WriteLine("destStart: {0}, srcStart: {1}, rangeLength: {2}, destOffset: {3}",
-						//	destStartRange, srcStartRange, rangeLength, destOffset);
 
 						long maxSrcRange = srcStartRange + rangeLength;
 						if (nextNumber >= srcStartRange && nextNumber <= maxSrcRange)
@@ -90,16 +76,12 @@ namespace AdventOfCode2023
 							break;
 						}
 					}
-
-					Console.WriteLine("Block: {0}, {1} -> number: {2}", block.Item1, block.Item2, nextNumber);
 				}
 
 				if (nextNumber < lowestLocation)
 				{
 					lowestLocation = nextNumber;
 				}
-
-				Console.WriteLine("seed: {0}, location: {1}", seed, nextNumber);
 			}
 
 			Console.WriteLine("Answer Puzzle 1: " + lowestLocation);
