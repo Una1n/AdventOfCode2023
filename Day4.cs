@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace AdventOfCode2023
 {
@@ -50,18 +49,12 @@ namespace AdventOfCode2023
 		{
 			public int ID;
 			public int cardsWon = 0;
-			public List<Card> copies = new();
+			public int copyAmount = 0;
 
 			public Card(int id, List<int> winNrs, List<int> playNrs)
 			{
 				ID = id;
 				cardsWon = winNrs.Intersect(playNrs).ToList().Count;
-			}
-
-			public Card(Card copy)
-			{
-				ID = copy.ID;
-				cardsWon = copy.cardsWon;
 			}
 		}
 
@@ -69,7 +62,8 @@ namespace AdventOfCode2023
 		{
 			string[] lines = File.ReadAllLines(@"Day4-Input.txt");
 			int sumPoints = 0;
-			List<Card> cards = new();
+			Card[] cards = new Card[lines.Length];
+			int cardIndex = 0;
 			foreach (string line in lines)
 			{
 				Match matches = Regex.Match(line, "^Card\\s+([0-9]+): (.*)");
@@ -90,38 +84,40 @@ namespace AdventOfCode2023
 					playingNumbers.Add(int.Parse(match.Value));
 				}
 
-				cards.Add(new Card(cardID, winningNumbers, playingNumbers));
+				cards[cardIndex] = new Card(cardID, winningNumbers, playingNumbers);
+				cardIndex++;
 			}
 
+			cardIndex = 0;
 			foreach (Card originalCard in cards)
 			{
 				if (originalCard.cardsWon > 0)
 				{
 					for (int i = 1; i <= originalCard.cardsWon; i++)
 					{
-						Card nextOriginalCard = cards.Find(x => x.ID == originalCard.ID + i);
-						nextOriginalCard.copies.Add(new Card(nextOriginalCard));
+						Card nextOriginalCard = cards[cardIndex + i];
+						nextOriginalCard.copyAmount++;
 					}
 				}
 
-				if (originalCard.copies.Count > 0)
+				if (originalCard.copyAmount > 0)
 				{
-					var stopwatch = Stopwatch.StartNew();
-					foreach (Card copy in originalCard.copies)
+					for (int o = 1; o <= originalCard.copyAmount; o++)
 					{
-						for (int i = 1; i <= copy.cardsWon; i++)
+						for (int i = 1; i <= originalCard.cardsWon; i++)
 						{
-							Card nextOriginalCard = cards.Find(x => x.ID == originalCard.ID + i);
-							nextOriginalCard.copies.Add(new Card(nextOriginalCard));
+							Card nextOriginalCard = cards[cardIndex + i];
+							nextOriginalCard.copyAmount++;
 						}
 					}
-					Console.WriteLine("{0:0} ms", stopwatch.Elapsed.TotalMilliseconds);
 				}
+
+				cardIndex++;
 			}
 
 			foreach (Card card in cards)
 			{
-				sumPoints += (card.copies.Count + 1);
+				sumPoints += (card.copyAmount + 1);
 			}
 
 			Console.WriteLine("Answer Puzzle 2: " + sumPoints);
