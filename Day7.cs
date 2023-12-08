@@ -2,16 +2,22 @@
 {
 	internal class Day7
 	{
-		// Ranks:
-		// Five of a kind
-		// Four of a kind
-		// Full House
-		// Three of a kind
-		// Two Pair
-		// One Pair
-		// High Card
+		static readonly Dictionary<char, int> cardRankings = new(){
+			{'2', 1},
+			{'3', 2},
+			{'4', 3},
+			{'5', 4},
+			{'6', 5},
+			{'7', 6},
+			{'8', 7},
+			{'9', 8},
+			{'T', 9},
+			{'J', 10},
+			{'Q', 11},
+			{'K', 12},
+			{'A', 13},
+		};
 
-		// Card Strength (high to low): A, K, Q, J, T, 9, 8, 7, 6, 5, 4, 3, 2
 		public enum TypeOfHand
 		{
 			NONE = 0,
@@ -24,11 +30,10 @@
 			FIVE_OF_A_KIND,
 		}
 
-
-		public class Hand
+		public class Hand : IComparable<Hand>
 		{
 			public string cardString = "";
-			public List<char> cards = new();
+			public List<(int, char)> cards = new();
 			public TypeOfHand handType = TypeOfHand.NONE;
 			public int betAmount = 0;
 
@@ -38,10 +43,26 @@
 				cardString = cs;
 				foreach (char c in cardString)
 				{
-					cards.Add(c);
+					cardRankings.TryGetValue(c, out int rank);
+					cards.Add((rank, c));
 				}
 
 				DetermineHandType();
+			}
+
+			public int CompareTo(Hand next)
+			{
+				for (int i = 0; i < 5; i++)
+				{
+					(int, char) oriCard = cards[i];
+					(int, char) nextCard = next.cards[i];
+					if (oriCard.Item1 != nextCard.Item1)
+					{
+						return oriCard.Item1.CompareTo(nextCard.Item1);
+					}
+				}
+
+				return -1;
 			}
 
 			public void DetermineHandType()
@@ -49,7 +70,6 @@
 				List<int> cardsCount = cards.GroupBy(x => x).Select(s => s.Count()).ToList();
 				foreach (int count in cardsCount)
 				{
-					Console.WriteLine(count);
 					if (count == 5)
 					{
 						handType = TypeOfHand.FIVE_OF_A_KIND;
@@ -99,13 +119,26 @@
 				hands.Add(new Hand(cards, betAmount));
 			}
 
-			List<Hand> sortedList = hands.OrderBy(x => (int)x.handType).ToList();
-			foreach (Hand h in sortedList)
+			int rank = 1;
+			int sumBets = 0;
+			IEnumerable<IGrouping<TypeOfHand, Hand>> grouped = hands.OrderBy(x => (int)x.handType).GroupBy(g => g.handType).ToList();
+			foreach (IGrouping<TypeOfHand, Hand> group in grouped)
 			{
-				Console.WriteLine("Hand: {0}", h.cardString);
+				List<Hand> sortedCards = new();
+				foreach (Hand hh in group)
+				{
+					sortedCards.Add(hh);
+				}
+
+				sortedCards.Sort();
+				foreach (Hand hhh in sortedCards)
+				{
+					sumBets += (rank * hhh.betAmount);
+					rank++;
+				}
 			}
 
-			//Console.WriteLine("Answer Puzzle 1: " + answer);
+			Console.WriteLine("Answer Puzzle 1: " + sumBets);
 		}
 
 		public static void RunPuzzle2()
