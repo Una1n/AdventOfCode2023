@@ -94,39 +94,44 @@
 
 				foreach (int count in cardsCount)
 				{
-					if (count == 5)
-					{
-						handType = TypeOfHand.FIVE_OF_A_KIND;
-					}
-					else if (count == 4)
-					{
-						handType = TypeOfHand.FOUR_OF_A_KIND;
-					}
-					else if (count == 3 && cardsCount.Count == 2)
-					{
-						handType = TypeOfHand.FULL_HOUSE;
-					}
-					else if (count == 3 && cardsCount.Count == 3)
-					{
-						handType = TypeOfHand.THREE_OF_A_KIND;
-					}
-					else if (count == 2 && cardsCount.Count == 3)
-					{
-						handType = TypeOfHand.TWO_PAIR;
-					}
-					else if (count == 2 && cardsCount.Count == 4)
-					{
-						handType = TypeOfHand.ONE_PAIR;
-					}
-					else if (count == 1 && cardsCount.Count == 5)
-					{
-						handType = TypeOfHand.HIGH_CARD;
-					}
+					SetHandType(count, cardsCount.Count);
 
 					if (handType != TypeOfHand.NONE)
 					{
 						break;
 					}
+				}
+			}
+
+			public void SetHandType(int count, int total)
+			{
+				if (count == 5)
+				{
+					handType = TypeOfHand.FIVE_OF_A_KIND;
+				}
+				else if (count == 4)
+				{
+					handType = TypeOfHand.FOUR_OF_A_KIND;
+				}
+				else if (count == 3 && total == 2)
+				{
+					handType = TypeOfHand.FULL_HOUSE;
+				}
+				else if (count == 3 && total == 3)
+				{
+					handType = TypeOfHand.THREE_OF_A_KIND;
+				}
+				else if (count == 2 && total == 3)
+				{
+					handType = TypeOfHand.TWO_PAIR;
+				}
+				else if (count == 2 && total == 4)
+				{
+					handType = TypeOfHand.ONE_PAIR;
+				}
+				else if (count == 1 && total == 5)
+				{
+					handType = TypeOfHand.HIGH_CARD;
 				}
 			}
 		}
@@ -178,34 +183,7 @@
 						newCount += jokerAmount;
 					}
 
-					if (newCount == 5)
-					{
-						handType = TypeOfHand.FIVE_OF_A_KIND;
-					}
-					else if (newCount == 4)
-					{
-						handType = TypeOfHand.FOUR_OF_A_KIND;
-					}
-					else if (newCount == 3 && typesOfCards == 2)
-					{
-						handType = TypeOfHand.FULL_HOUSE;
-					}
-					else if (newCount == 3 && typesOfCards == 3)
-					{
-						handType = TypeOfHand.THREE_OF_A_KIND;
-					}
-					else if (newCount == 2 && typesOfCards == 3)
-					{
-						handType = TypeOfHand.TWO_PAIR;
-					}
-					else if (newCount == 2 && typesOfCards == 4)
-					{
-						handType = TypeOfHand.ONE_PAIR;
-					}
-					else if (newCount == 1 && typesOfCards == 5)
-					{
-						handType = TypeOfHand.HIGH_CARD;
-					}
+					SetHandType(newCount, typesOfCards);
 
 					if (handType != TypeOfHand.NONE)
 					{
