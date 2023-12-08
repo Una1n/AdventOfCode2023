@@ -157,17 +157,7 @@
 
 			public override void DetermineHandType()
 			{
-				List<char> cardsWithoutJokers = new();
-				foreach (char c in cardString)
-				{
-					if (c == 'J')
-					{
-						continue;
-					}
-
-					cardsWithoutJokers.Add(c);
-				}
-
+				List<char> cardsWithoutJokers = cardString.Replace("J", "").ToList();
 				List<int> cardsCount = cardsWithoutJokers
 					.GroupBy(x => x)
 					.Select(s => s.Count())
