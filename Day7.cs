@@ -67,7 +67,10 @@
 
 			public void DetermineHandType()
 			{
-				List<int> cardsCount = cards.GroupBy(x => x).Select(s => s.Count()).ToList();
+				List<int> cardsCount = cards.GroupBy(x => x)
+					.Select(s => s.Count())
+					.ToList();
+
 				foreach (int count in cardsCount)
 				{
 					if (count == 5)
@@ -121,15 +124,13 @@
 
 			int rank = 1;
 			int sumBets = 0;
-			IEnumerable<IGrouping<TypeOfHand, Hand>> grouped = hands.OrderBy(x => (int)x.handType).GroupBy(g => g.handType).ToList();
+			IEnumerable<IGrouping<TypeOfHand, Hand>> grouped = hands
+				.OrderBy(x => (int)x.handType)
+				.GroupBy(g => g.handType)
+				.ToList();
 			foreach (IGrouping<TypeOfHand, Hand> group in grouped)
 			{
-				List<Hand> sortedCards = new();
-				foreach (Hand hh in group)
-				{
-					sortedCards.Add(hh);
-				}
-
+				List<Hand> sortedCards = group.ToList();
 				sortedCards.Sort();
 				foreach (Hand hhh in sortedCards)
 				{
