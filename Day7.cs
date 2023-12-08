@@ -18,6 +18,22 @@
 			{'A', 13},
 		};
 
+		static readonly Dictionary<char, int> cardJokerRankings = new(){
+			{'J', 1},
+			{'2', 2},
+			{'3', 3},
+			{'4', 4},
+			{'5', 5},
+			{'6', 6},
+			{'7', 7},
+			{'8', 8},
+			{'9', 9},
+			{'T', 10},
+			{'Q', 11},
+			{'K', 12},
+			{'A', 13},
+		};
+
 		public enum TypeOfHand
 		{
 			NONE = 0,
@@ -41,6 +57,11 @@
 			{
 				betAmount = bet;
 				cardString = cs;
+				InitializeCards();
+			}
+
+			public virtual void InitializeCards()
+			{
 				foreach (char c in cardString)
 				{
 					cardRankings.TryGetValue(c, out int rank);
@@ -65,7 +86,7 @@
 				return -1;
 			}
 
-			public void DetermineHandType()
+			public virtual void DetermineHandType()
 			{
 				List<int> cardsCount = cards.GroupBy(x => x)
 					.Select(s => s.Count())
@@ -110,6 +131,100 @@
 			}
 		}
 
+		public class HandPuzzleTwo : Hand
+		{
+			public int jokerAmount = 0;
+
+			public HandPuzzleTwo(string cs, int bet) : base(cs, bet)
+			{
+			}
+
+			public override void InitializeCards()
+			{
+				foreach (char c in cardString)
+				{
+					if (c == 'J')
+					{
+						jokerAmount++;
+					}
+
+					cardJokerRankings.TryGetValue(c, out int rank);
+					cards.Add((rank, c));
+				}
+
+				DetermineHandType();
+			}
+
+			public override void DetermineHandType()
+			{
+				List<char> cardsWithoutJokers = new();
+				foreach (char c in cardString)
+				{
+					if (c == 'J')
+					{
+						continue;
+					}
+
+					cardsWithoutJokers.Add(c);
+				}
+
+				List<int> cardsCount = cardsWithoutJokers
+					.GroupBy(x => x)
+					.Select(s => s.Count())
+					.OrderDescending()
+					.ToList();
+
+				if (cardsCount.Count == 0)
+				{
+					handType = TypeOfHand.FIVE_OF_A_KIND;
+				}
+
+				for (int i = 0; i < cardsCount.Count; i++)
+				{
+					int newCount = cardsCount[i];
+					int typesOfCards = cardsCount.Count;
+					if (jokerAmount > 0 && newCount > 0)
+					{
+						newCount += jokerAmount;
+					}
+
+					if (newCount == 5)
+					{
+						handType = TypeOfHand.FIVE_OF_A_KIND;
+					}
+					else if (newCount == 4)
+					{
+						handType = TypeOfHand.FOUR_OF_A_KIND;
+					}
+					else if (newCount == 3 && typesOfCards == 2)
+					{
+						handType = TypeOfHand.FULL_HOUSE;
+					}
+					else if (newCount == 3 && typesOfCards == 3)
+					{
+						handType = TypeOfHand.THREE_OF_A_KIND;
+					}
+					else if (newCount == 2 && typesOfCards == 3)
+					{
+						handType = TypeOfHand.TWO_PAIR;
+					}
+					else if (newCount == 2 && typesOfCards == 4)
+					{
+						handType = TypeOfHand.ONE_PAIR;
+					}
+					else if (newCount == 1 && typesOfCards == 5)
+					{
+						handType = TypeOfHand.HIGH_CARD;
+					}
+
+					if (handType != TypeOfHand.NONE)
+					{
+						break;
+					}
+				}
+			}
+		}
+
 		public static void RunPuzzle1()
 		{
 			string[] lines = File.ReadAllLines(@"Day7-Input.txt");
@@ -124,11 +239,11 @@
 
 			int rank = 1;
 			int sumBets = 0;
-			IEnumerable<IGrouping<TypeOfHand, Hand>> grouped = hands
+			IEnumerable<IGrouping<TypeOfHand, Hand>> groupedByHandType = hands
 				.OrderBy(x => (int)x.handType)
 				.GroupBy(g => g.handType)
 				.ToList();
-			foreach (IGrouping<TypeOfHand, Hand> group in grouped)
+			foreach (IGrouping<TypeOfHand, Hand> group in groupedByHandType)
 			{
 				List<Hand> sortedCards = group.ToList();
 				sortedCards.Sort();
@@ -144,10 +259,34 @@
 
 		public static void RunPuzzle2()
 		{
-			//string[] lines = File.ReadAllLines(@"Day6-Input.txt");
+			string[] lines = File.ReadAllLines(@"Day7-Input.txt");
+			List<Hand> hands = new();
+			foreach (string line in lines)
+			{
+				string[] cardLine = line.Split(' ');
+				string cards = cardLine[0];
+				int betAmount = int.Parse(cardLine[1]);
+				hands.Add(new HandPuzzleTwo(cards, betAmount));
+			}
 
+			int rank = 1;
+			int sumBets = 0;
+			IEnumerable<IGrouping<TypeOfHand, Hand>> groupedByHandType = hands
+				.OrderBy(x => (int)x.handType)
+				.GroupBy(g => g.handType)
+				.ToList();
+			foreach (IGrouping<TypeOfHand, Hand> group in groupedByHandType)
+			{
+				List<Hand> sortedCards = group.ToList();
+				sortedCards.Sort();
+				foreach (Hand hhh in sortedCards)
+				{
+					sumBets += (rank * hhh.betAmount);
+					rank++;
+				}
+			}
 
-			//Console.WriteLine("Answer Puzzle 2: " + winningWays);
+			Console.WriteLine("Answer Puzzle 2: " + sumBets);
 		}
 	}
 }
