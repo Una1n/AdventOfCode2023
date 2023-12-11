@@ -27,6 +27,20 @@ namespace AdventOfCode2023
 
 				return null;
 			}
+
+			public static List<Node> FindAllNodesInListEndingWithChar(List<Node> list, char endChar)
+			{
+				List<Node> nodesEndingWithChar = new();
+				foreach (Node node in list)
+				{
+					if (node.ID[2] == endChar)
+					{
+						nodesEndingWithChar.Add(node);
+					}
+				}
+
+				return nodesEndingWithChar;
+			}
 		}
 
 		public static void RunPuzzle1()
@@ -95,34 +109,75 @@ namespace AdventOfCode2023
 
 		public static void RunPuzzle2()
 		{
-			//string[] lines = File.ReadAllLines(@"Day7-Input.txt");
-			//List<Hand> hands = new();
-			//foreach (string line in lines)
-			//{
-			//	string[] cardLine = line.Split(' ');
-			//	string cards = cardLine[0];
-			//	int betAmount = int.Parse(cardLine[1]);
-			//	hands.Add(new HandPuzzleTwo(cards, betAmount));
-			//}
+			string[] lines = File.ReadAllLines(@"Day8-Input.txt");
+			string instructions = lines[0];
 
-			//int rank = 1;
-			//int sumBets = 0;
-			//IEnumerable<IGrouping<TypeOfHand, Hand>> groupedByHandType = hands
-			//	.OrderBy(x => (int)x.handType)
-			//	.GroupBy(g => g.handType)
-			//	.ToList();
-			//foreach (IGrouping<TypeOfHand, Hand> group in groupedByHandType)
-			//{
-			//	List<Hand> sortedCards = group.ToList();
-			//	sortedCards.Sort();
-			//	foreach (Hand hhh in sortedCards)
-			//	{
-			//		sumBets += (rank * hhh.betAmount);
-			//		rank++;
-			//	}
-			//}
+			List<Node> nodes = new();
+			for (int i = 2; i < lines.Length; i++)
+			{
+				Match sequence = Regex.Match(lines[i], @"^(.+)\s=\s\((.+),\s(.+)\)");
+				string id = sequence.Groups[1].Value;
+				string left = sequence.Groups[2].Value;
+				string right = sequence.Groups[3].Value;
+				//Console.WriteLine("ID: {0}, Left: {1}, Right: {2}", id, left, right);
 
-			//Console.WriteLine("Answer Puzzle 2: " + sumBets);
+				Node? addedNode = Node.FindNodeInList(nodes, id);
+				if (addedNode == null)
+				{
+					addedNode = new(id);
+					nodes.Add(addedNode);
+				}
+
+				addedNode.Left = Node.FindNodeInList(nodes, left);
+				if (addedNode.Left == null)
+				{
+					addedNode.Left = new(left);
+					nodes.Add(addedNode.Left);
+				}
+
+				addedNode.Right = Node.FindNodeInList(nodes, right);
+				if (addedNode.Right == null)
+				{
+					addedNode.Right = new(right);
+					nodes.Add(addedNode.Right);
+				}
+			}
+
+			bool foundAllNodesEndingWithZ = false;
+			List<Node> currentNodes = Node.FindAllNodesInListEndingWithChar(nodes, 'A');
+			int nodesCount = currentNodes.Count;
+			long steps = 0;
+			while (!foundAllNodesEndingWithZ)
+			{
+				for (int x = 0; x < instructions.Length; x++)
+				{
+					if (instructions[x] == 'L')
+					{
+						for (int y = 0; y < currentNodes.Count; y++)
+						{
+							currentNodes[y] = currentNodes[y].Left;
+						}
+						steps++;
+					}
+					else
+					{
+						for (int y = 0; y < currentNodes.Count; y++)
+						{
+							currentNodes[y] = currentNodes[y].Right;
+						}
+						steps++;
+					}
+
+					if (Node.FindAllNodesInListEndingWithChar(currentNodes, 'Z').Count == nodesCount)
+					{
+						foundAllNodesEndingWithZ = true;
+						break;
+					}
+				}
+				Console.WriteLine("Steps: {0}", steps);
+			}
+
+			Console.WriteLine("Answer Puzzle 2: " + steps);
 		}
 	}
 }
