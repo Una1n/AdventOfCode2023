@@ -7,8 +7,8 @@ namespace AdventOfCode2023
 		public class Node
 		{
 			public string ID = "";
-			public Node Left;
-			public Node Right;
+			public Node? Left;
+			public Node? Right;
 
 			public Node(string id)
 			{
@@ -41,47 +41,31 @@ namespace AdventOfCode2023
 				string id = sequence.Groups[1].Value;
 				string left = sequence.Groups[2].Value;
 				string right = sequence.Groups[3].Value;
-				Console.WriteLine("Sequence: {0} - ({1}, {2})", id, left, right);
 
-				Node foundIDNode = Node.FindNodeInList(nodes, id);
-				Node? addedNode = null;
-				if (foundIDNode == null)
+				Node? addedNode = Node.FindNodeInList(nodes, id);
+				if (addedNode == null)
 				{
 					addedNode = new(id);
 					nodes.Add(addedNode);
 				}
-				else
-				{
-					addedNode = foundIDNode;
-				}
 
-				Node foundLeftNode = Node.FindNodeInList(nodes, left);
-				if (foundLeftNode == null)
+				addedNode.Left = Node.FindNodeInList(nodes, left);
+				if (addedNode.Left == null)
 				{
 					addedNode.Left = new(left);
 					nodes.Add(addedNode.Left);
 				}
-				else
-				{
-					addedNode.Left = foundLeftNode;
-				}
 
-				Node foundRightNode = Node.FindNodeInList(nodes, right);
-				if (foundRightNode == null)
+				addedNode.Right = Node.FindNodeInList(nodes, right);
+				if (addedNode.Right == null)
 				{
 					addedNode.Right = new(right);
 					nodes.Add(addedNode.Right);
 				}
-				else
-				{
-					addedNode.Right = foundRightNode;
-				}
-
-				nodes.Add(addedNode);
 			}
 
 			bool foundZZZNode = false;
-			Node currentNode = Node.FindNodeInList(nodes, "AAA");
+			Node? currentNode = Node.FindNodeInList(nodes, "AAA");
 			int steps = 0;
 			while (!foundZZZNode)
 			{
@@ -89,16 +73,16 @@ namespace AdventOfCode2023
 				{
 					if (instructions[x] == 'L')
 					{
-						currentNode = currentNode.Left;
+						currentNode = currentNode?.Left;
 						steps++;
 					}
 					else
 					{
-						currentNode = currentNode.Right;
+						currentNode = currentNode?.Right;
 						steps++;
 					}
 
-					if (currentNode.ID == "ZZZ")
+					if (currentNode?.ID == "ZZZ")
 					{
 						foundZZZNode = true;
 						break;
