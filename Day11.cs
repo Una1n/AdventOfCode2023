@@ -5,7 +5,16 @@
 		public static void RunPuzzle1()
 		{
 			string[] lines = File.ReadAllLines(@"Day11-Input.txt");
+			List<string> map = new();
+			foreach (string line in lines)
+			{
+				map.Add(line);
 
+				if (!line.Contains('#'))
+				{
+					map.Add(line);
+				}
+			}
 
 			//Console.WriteLine("Answer Puzzle 1: " + sumHistory);
 		}
