@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 
 namespace AdventOfCode2023
 {
@@ -16,8 +17,11 @@ namespace AdventOfCode2023
 			}
 		}
 
-		public static void RunPuzzle1()
+		public static void RunPuzzle(int puzzle = 1, long extraExpansion = 1)
 		{
+			var timer = new Stopwatch();
+			timer.Start();
+
 			string[] lines = File.ReadAllLines(@"Day11-Input.txt");
 
 			// Get Expansion X Positions
@@ -75,10 +79,9 @@ namespace AdventOfCode2023
 			}
 
 			int galaxyIndex = 1;
-			int sumDistancesGalaxy = 0;
+			long sumDistancesGalaxy = 0;
 			foreach (Galaxy g in galaxies)
 			{
-				//Console.WriteLine("Galaxy: {0}, position: {1}", g.ID, g.position);
 				for (int x = galaxyIndex; x < galaxies.Count; x++)
 				{
 					int extraSteps = 0;
@@ -120,22 +123,17 @@ namespace AdventOfCode2023
 						}
 					}
 
-					//Console.WriteLine("Next Galaxy: {0}, Steps without: {1}, Steps with: {2}", nextGalaxy.ID, stepsWithoutExpansion, stepsWithoutExpansion + extraSteps);
-					sumDistancesGalaxy += stepsWithoutExpansion + extraSteps;
+					sumDistancesGalaxy += stepsWithoutExpansion + (extraSteps * extraExpansion);
 				}
 
 				galaxyIndex++;
 			}
 
-			Console.WriteLine("Answer Puzzle 1: " + sumDistancesGalaxy);
-		}
+			timer.Stop();
+			TimeSpan timeTaken = timer.Elapsed;
 
-		public static void RunPuzzle2()
-		{
-			string[] lines = File.ReadAllLines(@"Day11-Input.txt");
-
-
-			//Console.WriteLine("Answer Puzzle 2: " + sumHistory);
+			Console.WriteLine("Answer Puzzle {0}: {1}", puzzle, sumDistancesGalaxy);
+			Console.WriteLine("Time: {0}ms", timeTaken.TotalMilliseconds);
 		}
 	}
 }

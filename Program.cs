@@ -59,7 +59,7 @@ switch (Console.ReadLine())
 		Day10.RunPuzzle2();
 		break;
 	case "11":
-		Day11.RunPuzzle1();
-		Day11.RunPuzzle2();
+		Day11.RunPuzzle(1);
+		Day11.RunPuzzle(2, 999999);
 		break;
 }
