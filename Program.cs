@@ -14,7 +14,7 @@ Console.WriteLine("8) Day 8 - puzzle 2 is bruteforced");
 Console.WriteLine("9) Day 9");
 Console.WriteLine("10) Day 10 - only puzzle 1");
 Console.WriteLine("11) Day 11");
-Console.WriteLine("15) Day 15");
+Console.WriteLine("15) Day 15 - only puzzle 1");
 Console.Write("\r\nSelect an option: ");
 
 switch (Console.ReadLine())
