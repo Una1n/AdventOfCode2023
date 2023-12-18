@@ -120,9 +120,46 @@ namespace AdventOfCode2023
 		public static void RunPuzzle2()
 		{
 			string[] lines = File.ReadAllLines(@"Day16-Input.txt");
+			char[][] map = lines.Select(item => item.ToArray()).ToArray();
 
+			int highestTiles = 0;
+			for (int i = 0; i < map.Length; i++)
+			{
+				int energizedTiles = GetEnergizedTiles(map, new Vector2(i, 0), new Vector2(0, 1));
+				if (energizedTiles > highestTiles)
+				{
+					highestTiles = energizedTiles;
+				}
+			}
 
-			//Console.WriteLine("Answer Puzzle 2: " + sumHistory);
+			for (int i = 0; i < map.Length; i++)
+			{
+				int energizedTiles = GetEnergizedTiles(map, new Vector2(i, map[0].Length - 1), new Vector2(0, -1));
+				if (energizedTiles > highestTiles)
+				{
+					highestTiles = energizedTiles;
+				}
+			}
+
+			for (int i = 0; i < map[0].Length; i++)
+			{
+				int energizedTiles = GetEnergizedTiles(map, new Vector2(0, i), new Vector2(1, 0));
+				if (energizedTiles > highestTiles)
+				{
+					highestTiles = energizedTiles;
+				}
+			}
+
+			for (int i = 0; i < map[0].Length; i++)
+			{
+				int energizedTiles = GetEnergizedTiles(map, new Vector2(map[0].Length - 1, i), new Vector2(-1, 0));
+				if (energizedTiles > highestTiles)
+				{
+					highestTiles = energizedTiles;
+				}
+			}
+
+			Console.WriteLine("Answer Puzzle 2: " + highestTiles);
 		}
 	}
 }
