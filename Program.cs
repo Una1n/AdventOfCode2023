@@ -14,6 +14,7 @@ Console.WriteLine("8) Day 8 - puzzle 2 is bruteforced");
 Console.WriteLine("9) Day 9");
 Console.WriteLine("10) Day 10 - only puzzle 1");
 Console.WriteLine("11) Day 11");
+Console.WriteLine("12) Day 12");
 Console.WriteLine("15) Day 15 - only puzzle 1");
 Console.WriteLine("16) Day 16");
 Console.Write("\r\nSelect an option: ");
@@ -63,6 +64,10 @@ switch (Console.ReadLine())
 	case "11":
 		Day11.RunPuzzle(1);
 		Day11.RunPuzzle(2, 999999);
+		break;
+	case "12":
+		Day12.RunPuzzle1();
+		Day12.RunPuzzle2();
 		break;
 	case "15":
 		Day15.RunPuzzle1();
